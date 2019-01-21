@@ -7,8 +7,14 @@ Created on Tue Nov 13 17:23:03 2018
 """
 
 import random
-import tkinter
-from tkinter import filedialog
+try:
+    import tkinter
+    from tkinter import filedialog
+except ImportError:
+    print("Python 3 and tkinter are required to run this program.")
+    exiting = input("[e]xit")
+    while(exiting != "E" ):
+        exiting = input("[e]xit")
 
 class GameOfLife(tkinter.Tk):
     def __init__(self):
@@ -17,9 +23,13 @@ class GameOfLife(tkinter.Tk):
         self.game_on = False
 
         self.title("Game of life")
-        gol_icon = tkinter.PhotoImage(file="GoL_icon.gif")
-        self.tk.call("wm", "iconphoto", self._w, gol_icon)
-        self.iconphoto = gol_icon
+        try:
+            gol_icon = tkinter.PhotoImage(file="GoL_icon.gif")
+            self.tk.call("wm", "iconphoto", self._w, gol_icon)
+            self.iconphoto = gol_icon
+        except tkinter.TclError:
+            pass
+
         self.resizable(0, 0)
 
         self.start_size = 50
@@ -134,8 +144,12 @@ class About(tkinter.Frame):
         scroll.grid(column=1, sticky="ns")
         about.grid(row=0, column=0, sticky="news")
 
-        with open("about.txt") as about_file:
-            text = about_file.read()
+        try:
+            with open("about.txt") as about_file:
+                text = about_file.read()
+        except FileNotFoundError:
+            text = """About file not found. 
+For info about Game Of Life visit https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"""
 
         about.insert("insert", text)
         about.configure(state="disabled")
@@ -556,11 +570,18 @@ class Game(tkinter.Frame):
         self.lower_buttons = tkinter.Frame(self.button_frame)
         self.lower_buttons.grid()
         self.create_buttons()
-        settings_image = tkinter.PhotoImage(file="settings.gif")
-        self.settings_button = tkinter.Button(self.upper_buttons,
-                                              image=settings_image,
-                                              command=self.settings_action)
-        self.settings_button.image = settings_image
+
+        try:
+            settings_image = tkinter.PhotoImage(file="settings.gif")
+            self.settings_button = tkinter.Button(self.upper_buttons,
+                                                  image=settings_image,
+                                                  command=self.settings_action)
+            self.settings_button.image = settings_image
+        except tkinter.TclError:
+            self.settings_button = tkinter.Button(self.upper_buttons,
+                                                  text="Settings",
+                                                  command=self.settings_action)
+
         self.buttons.append(self.settings_button)
         self.menu_button = tkinter.Button(self.lower_buttons, text="Back to menu",
                                           command=lambda:
