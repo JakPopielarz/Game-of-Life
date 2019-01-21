@@ -1,0 +1,1 @@
+Do uruchomienia projektu potrzebna jest biblioteka tkinter. Uruchomić program można albo uruchamiając kod w wybranym IDE, albo przez terminal. W przypadku systemu unixowego należy przejść do folderu, w którym znajduje się plik game_of_life.py, a następnie wykonać komendę python3 "./game_of_life.py".
