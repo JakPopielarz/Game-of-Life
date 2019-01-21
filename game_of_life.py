@@ -7,6 +7,7 @@ Created on Tue Nov 13 17:23:03 2018
 """
 
 import random
+import os
 try:
     import tkinter
     from tkinter import filedialog
@@ -24,7 +25,14 @@ class GameOfLife(tkinter.Tk):
 
         self.title("Game of life")
         try:
-            gol_icon = tkinter.PhotoImage(file="GoL_icon.gif")
+            icon_path = os.getcwd()
+
+            if icon_path[0] == "/":
+                icon_path += "/Resources/GoL_icon.gif"
+            elif icon_path[2] == "\\":
+                icon_path += "\\Resources\\Gol_icon.gif"
+
+            gol_icon = tkinter.PhotoImage(file=icon_path)
             self.tk.call("wm", "iconphoto", self._w, gol_icon)
             self.iconphoto = gol_icon
         except tkinter.TclError:
@@ -145,10 +153,17 @@ class About(tkinter.Frame):
         about.grid(row=0, column=0, sticky="news")
 
         try:
-            with open("about.txt") as about_file:
+            about_path = os.getcwd()
+
+            if about_path[0] == "/":
+                about_path += "/Resources/about.txt"
+            elif about_path[2] == "\\":
+                about_path += "\\Resources\\about.txt"
+
+            with open(about_path) as about_file:
                 text = about_file.read()
         except FileNotFoundError:
-            text = """About file not found. 
+            text = """About file not found.
 For info about Game Of Life visit https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"""
 
         about.insert("insert", text)
@@ -572,7 +587,14 @@ class Game(tkinter.Frame):
         self.create_buttons()
 
         try:
-            settings_image = tkinter.PhotoImage(file="settings.gif")
+            settings_icon_path = os.getcwd()
+
+            if settings_icon_path[0] == "/":
+                settings_icon_path += "/Resources/settings.gif"
+            elif settings_icon_path[2] == "\\":
+                settings_icon_path += "\\Resources\\settings.gif"
+            
+            settings_image = tkinter.PhotoImage(file=settings_icon_path)
             self.settings_button = tkinter.Button(self.upper_buttons,
                                                   image=settings_image,
                                                   command=self.settings_action)
@@ -727,7 +749,15 @@ class Game(tkinter.Frame):
                                                             self.canvas)
 
     def save_action(self):
-        savefile = filedialog.asksaveasfile(mode="w", defaultextension=".txt",
+        save_path = os.getcwd()
+
+        if save_path[0] == "/":
+            save_path += "/Presets"
+        elif save_path[2] == "\\":
+            save_path += "\\Presets"
+
+        savefile = filedialog.asksaveasfile(initialdir=save_path,
+                                            mode="w", defaultextension=".txt",
                                             title="Save state to file",
                                             filetypes=[('Presets', '.txt'),
                                                        ('All files', '.*')])
@@ -748,7 +778,15 @@ class Game(tkinter.Frame):
                 savefile.write("\n")
 
     def load_action(self):
-        loadfile = filedialog.askopenfile(mode="r", title="Load state from file",
+        load_path = os.getcwd()
+
+        if load_path[0] == "/":
+            load_path += "/Presets"
+        elif load_path[2] == "\\":
+            load_path += "\\Presets"
+
+        loadfile = filedialog.askopenfile(initialdir=load_path,
+                                          mode="r", title="Load state from file",
                                           filetypes=[('Presets', '.txt'),
                                                      ('All files', '.*')])
         if loadfile:
